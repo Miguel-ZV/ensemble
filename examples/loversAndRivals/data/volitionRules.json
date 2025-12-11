@@ -247,6 +247,120 @@
 			],
 			"origin": "volitionRules",
 			"id": "volitionRules_10"
+		},
+		{
+			"name": "Everyone Wants to Mog",
+			"conditions": [
+				{
+					"category": "trait",
+					"type": "anyone",
+					"first": "someone",
+					"value": true
+				}
+			],
+			"effects": [
+				{
+					"category": "attribute",
+					"type": "appearance",
+					"first": "someone",
+					"weight": 30,
+					"intentType": true,
+					"value": true
+				}
+			],
+			"origin": "volitionRules",
+			"id": "volitionRules_11"
+		},
+		{
+			"name": "People want to get closer to looksmaxxers",
+			"conditions": [
+				{
+					"category": "attribute",
+					"type": "intelligence",
+					"first": "LTN",
+					"value": 50,
+					"operator": ">"
+				},
+				{
+					"category": "trait",
+					"type": "anyone",
+					"first": "onlooker",
+					"value": true
+				}
+			],
+			"effects": [
+				{
+					"category": "feeling",
+					"type": "closeness",
+					"first": "onlooker",
+					"second": "looksmaxxer",
+					"weight": 25,
+					"intentType": true,
+					"value": true
+				}
+			],
+			"origin": "volitionRules",
+			"id": "volitionRules_12"
+		},
+		{
+			"name": "The hero doesn't particularly want to get closer to the sidepiece",
+			"conditions": [
+				{
+					"category": "trait",
+					"type": "named hero",
+					"first": "hero",
+					"value": true
+				},
+				{
+					"category": "trait",
+					"type": "named sidepiece",
+					"first": "sidepiece",
+					"value": true
+				}
+			],
+			"effects": [
+				{
+					"category": "feeling",
+					"type": "closeness",
+					"first": "hero",
+					"second": "sidepiece",
+					"weight": -10,
+					"intentType": true,
+					"value": true
+				}
+			],
+			"origin": "volitionRules",
+			"id": "volitionRules_13"
+		},
+		{
+			"name": "The sidepiece wants to get closer to the hero",
+			"conditions": [
+				{
+					"category": "trait",
+					"type": "named sidepiece",
+					"first": "sidepiece",
+					"value": true
+				},
+				{
+					"category": "trait",
+					"type": "named hero",
+					"first": "hero",
+					"value": true
+				}
+			],
+			"effects": [
+				{
+					"category": "feeling",
+					"type": "closeness",
+					"first": "sidepiece",
+					"second": "hero",
+					"weight": 10,
+					"intentType": true,
+					"value": true
+				}
+			],
+			"origin": "volitionRules",
+			"id": "volitionRules_14"
 		}
 	]
 }

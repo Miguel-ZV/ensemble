@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
 	<title>Lovers and Rivals</title>
 	<script src="ensemble.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles.css">
 
-	<!-- Scale page to the device width instead of trying to zoom out --> 
+	<!-- Scale page to the device width instead of trying to zoom out -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
+
 <body>
 
 	<div id="titleDiv">
@@ -20,14 +22,17 @@
 		<p id="statusMessage">Click buttons to win the heart of your love!</p>
 	</div>
 
-	<div class = "field" onclick="move()">
-		<div class = "character" id="hero" title="hero">
+	<div class="field" onclick="move()">
+		<div class="character" id="hero" title="hero">
 			\O/
 		</div>
-		<div class = "character" id="love" title="love">
+		<div class="character" id="sidepiece" title="sidepiece">
+			o]
+		</div>
+		<div class="character" id="love" title="love">
 			0\
 		</div>
-		<div class = "character" id="rival" title="rival">
+		<div class="character" id="rival" title="rival">
 			@.o
 		</div>
 	</div>
@@ -40,6 +45,7 @@
 		<div class="actionList" id="actionList_hero_hero"></div>
 		<!--Towards Rival:-->
 		<div class="actionList" id="actionList_hero_rival"></div>
+		<div class="actionList" id="actionList_hero_sidepiece"></div>
 	</div>
 
 	<div id="stateArea">
@@ -48,22 +54,28 @@
 			<h2>Closeness</h2>
 			<div id="closenessHeroToLover">hero to love: <span id="closenessHeroToLoverNumber">NA</span></div>
 			<div id="closenessLoverToHero">love to hero: <span id="closenessLoverToHeroNumber">NA</span></div>
-			<div id="closenessLoverToHero">love to rival: <span id="closenessLoverToRivalNumber">NA</span></div>
+			<div id="closenessLoverToRival">love to rival: <span id="closenessLoverToRivalNumber">NA</span></div>
+			<div id="closenessSidepieceToHero">sidepiece to hero: <span id="closenessSidepieceToHeroNumber">NA</span>
+			</div>
 		</div>
 		<div class="state" id="attractionStateDisplay">
 			<h2>Attraction</h2>
 			<div id="attractionHeroToLover">hero to lover: <span id="attractionHeroToLoverNumber">NA</span></div>
 			<div id="attractionLoverToHero">lover to hero: <span id="attractionLoverToHeroNumber">NA</span></div>
 			<div id="attractionLoverToRival">lover to rival: <span id="attractionLoverToRivalNumber">NA</span></div>
+			<div id="attractionSidepieceToHero">sidepiece to hero: <span id="attractionSidepieceToHeroNumber">NA</span>
+			</div>
 		</div>
 		<div class="state" id="Hero Attributes">
 			<h2>Hero Attributes</h2>
 			<div id="heroStrength">strength: <span id="heroStrengthNumber">NA</span></div>
 			<div id="heroIntelligence">intelligence: <span id="heroIntelligenceNumber">NA</span></div>
+			<div id="heroAppearance">appearance: <span id="heroAppearanceNumber">NA</span></div>
 		</div>
 	</div>
 
 	<script src="loversAndRivals.js"></script>
 
 </body>
+
 </html>

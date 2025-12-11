@@ -4,25 +4,28 @@
 // Numerical values for important schema types between characters
 // Updated by updateLocalStateInformation()
 var stateInformation = {
-	"loveToHeroCloseness" : "NA",
-	"loveToHeroAttraction" : "NA",
-	"heroToLoveCloseness" : "NA",
-	"heroToLoveAttraction" : "NA",
-	"loveToRivalCloseness" : "NA",
-	"loveToRivalAttraction" :"NA",
-	"heroStrength" : "NA",
-	"heroIntelligence" : "NA"
+	"loveToHeroCloseness": "NA",
+	"loveToHeroAttraction": "NA",
+	"heroToLoveCloseness": "NA",
+	"heroToLoveAttraction": "NA",
+	"loveToRivalCloseness": "NA",
+	"loveToRivalAttraction": "NA",
+	"sidepieceToHeroAttraction": "NA",
+	"sidepieceToHeroCloseness": "NA",
+	"heroStrength": "NA",
+	"heroIntelligence": "NA",
+	"heroAppearance": "NA"
 };
 
 var gameVariables = {
-	"gameOver" : false,
-	"endingText" : "NA",
-	"turnNumber" : 0,
-	"numIntents" : 2,
-	"numActionsPerIntent" : 5
+	"gameOver": false,
+	"endingText": "NA",
+	"turnNumber": 0,
+	"numIntents": 2,
+	"numActionsPerIntent": 5
 };
 
-var move = function(){
+var move = function () {
 	var elem = document.getElementById("hero");
 	var left = 0;
 
@@ -37,14 +40,15 @@ var move = function(){
 };
 
 // Move little character icons according to current Ensemble state information
-var moveAllCharacters = function() {
+var moveAllCharacters = function () {
 	// Takes a little bit of computation!
-	var loveDestination = (stateInformation.widthOfField/2 - stateInformation.loveToHeroCloseness*1.5 + stateInformation.loveToRivalCloseness*2.5);
+	var loveDestination = (stateInformation.widthOfField / 2 - stateInformation.loveToHeroCloseness * 1.5 + stateInformation.loveToRivalCloseness * 2.5);
 	moveByCharacterName("hero", stateInformation.heroToLoveCloseness);
 	moveByCharacterName("love", loveDestination);
+	moveByCharacterName("sidepiece", stateInformation.sidepieceToHeroCloseness - 50);
 };
 
-var moveByCharacterName = function(name, destination){
+var moveByCharacterName = function (name, destination) {
 	//console.log("moveByCharacterName name: " , name);
 	//console.log("moveByCharacterName destination: " , destination);
 	var elem = document.getElementById(name);
@@ -54,11 +58,11 @@ var moveByCharacterName = function(name, destination){
 	//console.log("elem " , elem);
 
 	function frame() {
-		if(startPos > destination){ // we are moving backwards.
+		if (startPos > destination) { // we are moving backwards.
 			//console.log("decrementing...");
 			currentPos -= 1;
 		}
-		else if (startPos < destination){ // we are moving forwards.
+		else if (startPos < destination) { // we are moving forwards.
 			currentPos += 1;
 			//console.log("incrementing...");
 		}
@@ -70,22 +74,23 @@ var moveByCharacterName = function(name, destination){
 	var id = setInterval(frame, 10); // draw every 10ms
 };
 
-var positionCharacter = function(id, pos){
+var positionCharacter = function (id, pos) {
 	//console.log("I got here, id is " + id + " and pos is " + pos);
 	var elem = document.getElementById(id);
 	elem.style.left = pos + "px";
 };
 
-var setUpLoversAndRivalsInitialState = function(){
+var setUpLoversAndRivalsInitialState = function () {
 	// Update our local copies of these variables, and display them.
 	updateLocalStateInformation();
 	displayStateInformation();
 };
 
-var setupCharacterPositions = function(widthOfField){
+var setupCharacterPositions = function (widthOfField) {
 	var hero = document.getElementById("hero");
 	var love = document.getElementById("love");
 	var rival = document.getElementById("rival");
+	var sidepiece = document.getElementById("sidepiece");
 
 	// Get love to hero closeness
 	var loveToHeroCloseness = stateInformation.loveToHeroCloseness;
@@ -96,6 +101,8 @@ var setupCharacterPositions = function(widthOfField){
 	// Get hero to love closeness
 	var heroToLoveCloseness = stateInformation.heroToLoveCloseness;
 
+	var sidepieceToHeroCloseness = stateInformation.sidepieceToHeroCloseness - 50;
+
 	// Store the width of field information
 	stateInformation.widthOfField = widthOfField;
 
@@ -103,27 +110,29 @@ var setupCharacterPositions = function(widthOfField){
 
 	// Actually reposition the characters based on their closeness values.
 	// The love's position is an amalgamation of things.
-	var lovePosition = (widthOfField/2) + loveToRivalCloseness - loveToHeroCloseness; // starts in middle, pulled in both directions.
-	
+	var lovePosition = (widthOfField / 2) + loveToRivalCloseness - loveToHeroCloseness; // starts in middle, pulled in both directions.
+
 	hero.style.left = heroToLoveCloseness + 'px';
 	love.style.left = lovePosition + "px";
 	rival.style.left = widthOfField + "px"; // rival never moves
+	sidepiece.style.left = sidepieceToHeroCloseness + 'px';
 };
 
 // Fill in all of the actionList divs with buttons corresponding to the actions 
 // the player can take by calling individual instances of populateActionList
-var populateActionLists = function(storedVolitions, cast){
+var populateActionLists = function (storedVolitions, cast) {
 	// Populate the action list of hero to love:
 	populateActionList("hero", "love", storedVolitions, cast);
 	populateActionList("hero", "rival", storedVolitions, cast);
 	populateActionList("hero", "hero", storedVolitions, cast);
+	populateActionList("hero", "sidepiece", storedVolitions, cast);
 };
 
 // Fill the actionList div with buttons corresponding to the actions the player can take.
-var populateActionList = function(initiator, responder, storedVolitions, cast){
+var populateActionList = function (initiator, responder, storedVolitions, cast) {
 	var char1 = initiator;
 	var char2 = responder;
-	
+
 	// Num intents to look at: 5
 	// Num actions per intent: 2 (for now!)
 	//console.log("storedVolitions before getting possible actions... " , storedVolitions.dump());
@@ -134,19 +143,19 @@ var populateActionList = function(initiator, responder, storedVolitions, cast){
 	var actionList = document.getElementById(divName);
 
 	// Let's make a button for each action the hero wants to take!
-	for(var i = 0; i < possibleActions.length; i += 1){
+	for (var i = 0; i < possibleActions.length; i += 1) {
 		// Make a new button
 		var action = possibleActions[i];
 
 		// If the character doesn't have a strong volition to do this action,
 		// don't include it in the action list.
-		if(action.weight < 0){
+		if (action.weight < 0) {
 			continue;
 		}
-		var buttonnode= document.createElement('input');
-		buttonnode.setAttribute('type','button');
-		buttonnode.setAttribute('name',action);
-		buttonnode.setAttribute('value',action.displayName);
+		var buttonnode = document.createElement('input');
+		buttonnode.setAttribute('type', 'button');
+		buttonnode.setAttribute('name', action);
+		buttonnode.setAttribute('value', action.displayName);
 		buttonnode.actionToPerform = action;
 		buttonnode.cast = cast;
 		buttonnode.onclick = actionButtonClicked;
@@ -156,12 +165,12 @@ var populateActionList = function(initiator, responder, storedVolitions, cast){
 	}
 
 	// Write a little message if there were no possible actions.
-	if(actionList.innerHTML === ""){
+	if (actionList.innerHTML === "") {
 		actionList.innerHTML = "<i>No Actions Available</i>";
 	}
 };
 
-var actionButtonClicked = function(){
+var actionButtonClicked = function () {
 	// Clean away all of the other actions -- they made their choice!
 	clearActionList();
 
@@ -175,7 +184,7 @@ var actionButtonClicked = function(){
 
 	// Print out action success or failure messages if they're defined
 	var statusArea = document.getElementById("statusMessage");
-	var actionMessage = ""; 
+	var actionMessage = "";
 
 	if (this.actionToPerform.successMessage !== undefined) {
 		actionMessage = this.actionToPerform.successMessage;
@@ -199,7 +208,7 @@ var actionButtonClicked = function(){
 	document.dispatchEvent(event);
 };
 
-var clearActionList = function(){
+var clearActionList = function () {
 	// We're first going to make the entire action list disappear, 
 	// so as not to distract the player from the beautiful instantiations
 	var actionArea = document.getElementById("actionArea");
@@ -214,16 +223,18 @@ var clearActionList = function(){
 	heroToRivalActionList.innerHTML = "";
 	var heroToHeroActionList = document.getElementById("actionList_hero_hero");
 	heroToHeroActionList.innerHTML = "";
+	var heroToSidepieceActionList = document.getElementById("actionList_hero_sidepiece");
+	heroToSidepieceActionList.innerHTML = "";
 };
 
 // Check to see if the game is over!
-var checkForEndConditions = function(){
-	if(stateInformation.loveToRivalCloseness >= 90){
+var checkForEndConditions = function () {
+	if (stateInformation.loveToRivalCloseness >= 90) {
 		// uh oh, we lose!
 		gameVariables.gameOver = true;
 		gameVariables.endingText = "Game over! Your love is in the arms of your rival!";
 	}
-	if(stateInformation.loveToHeroCloseness >= 90 && stateInformation.heroToLoveCloseness >= 90){
+	if (stateInformation.loveToHeroCloseness >= 90 && stateInformation.heroToLoveCloseness >= 90) {
 		gameVariables.gameOver = true;
 		gameVariables.endingText = "Love is not a game, but you win! Your love is somewhat interested in you!";
 	}
@@ -231,7 +242,7 @@ var checkForEndConditions = function(){
 
 // There are certain things that we might need to 'refresh' again 
 // (the visibility of the action list, the state of dialogue bubbles, etc.)
-var cleanUpUIForNewTurn = function(){
+var cleanUpUIForNewTurn = function () {
 	var actionArea = document.getElementById("actionArea");
 	actionArea.style.visibility = "visible";
 
@@ -239,64 +250,84 @@ var cleanUpUIForNewTurn = function(){
 	turnNumberArea.innerHTML = gameVariables.turnNumber;
 };
 
-var displayStateInformation = function(){
+var displayStateInformation = function () {
 	document.getElementById("closenessHeroToLoverNumber").innerHTML = stateInformation.heroToLoveCloseness;
 	document.getElementById("closenessLoverToHeroNumber").innerHTML = stateInformation.loveToHeroCloseness;
 	document.getElementById("closenessLoverToRivalNumber").innerHTML = stateInformation.loveToRivalCloseness;
 	document.getElementById("attractionHeroToLoverNumber").innerHTML = stateInformation.heroToLoveAttraction;
 	document.getElementById("attractionLoverToHeroNumber").innerHTML = stateInformation.loveToHeroAttraction;
 	document.getElementById("attractionLoverToRivalNumber").innerHTML = stateInformation.loveToRivalAttraction;
+	document.getElementById("attractionSidepieceToHeroNumber").innerHTML = stateInformation.sidepieceToHeroAttraction;
+	document.getElementById("closenessSidepieceToHeroNumber").innerHTML = stateInformation.sidepieceToHeroCloseness;
 	document.getElementById("heroStrengthNumber").innerHTML = stateInformation.heroStrength;
 	document.getElementById("heroIntelligenceNumber").innerHTML = stateInformation.heroIntelligence;
+	document.getElementById("heroAppearanceNumber").innerHTML = stateInformation.heroAppearance;
 };
 
-var updateLocalStateInformation = function(){
+var updateLocalStateInformation = function () {
 	//First, let's grab the data we'll want to display
 	var loveToHeroClosenessPred = {
-		"category" : "feeling",
-		"type" : "closeness",
-		"first" : "love",
-		"second" : "hero"
+		"category": "feeling",
+		"type": "closeness",
+		"first": "love",
+		"second": "hero"
 	};
 	var loveToRivalClosenessPred = {
-		"category" : "feeling",
-		"type" : "closeness",
-		"first" : "love",
-		"second" : "rival"
+		"category": "feeling",
+		"type": "closeness",
+		"first": "love",
+		"second": "rival"
 	};
 	var heroToLoveClosenessPred = {
-		"category" : "feeling",
-		"type" : "closeness",
-		"first" : "hero",
-		"second" : "love"
+		"category": "feeling",
+		"type": "closeness",
+		"first": "hero",
+		"second": "love"
 	};
 	var loveToHeroAttractionPred = {
-		"category" : "feeling",
-		"type" : "attraction",
-		"first" : "love",
-		"second" : "hero"
+		"category": "feeling",
+		"type": "attraction",
+		"first": "love",
+		"second": "hero"
 	};
 	var heroToLoveattractionPred = {
-		"category" : "feeling",
-		"type" : "attraction",
-		"first" : "hero",
-		"second" : "love"
+		"category": "feeling",
+		"type": "attraction",
+		"first": "hero",
+		"second": "love"
 	};
 	var loveToRivalAttractionPred = {
-		"category" : "feeling",
-		"type" : "attraction",
-		"first" : "love",
-		"second" : "rival"
+		"category": "feeling",
+		"type": "attraction",
+		"first": "love",
+		"second": "rival"
+	};
+	var sidepieceToHeroAttractionPred = {
+		"category": "feeling",
+		"type": "attraction",
+		"first": "sidepiece",
+		"second": "hero"
+	};
+	var sidepieceToHeroClosenessPred = {
+		"category": "feeling",
+		"type": "closeness",
+		"first": "sidepiece",
+		"second": "hero"
 	};
 	var heroIntelligencePred = {
-		"category" : "attribute",
-		"type" : "intelligence",
-		"first" : "hero"
+		"category": "attribute",
+		"type": "intelligence",
+		"first": "hero"
 	};
 	var heroStrengthPred = {
-		"category" : "attribute",
-		"type" : "strength",
-		"first" : "hero"
+		"category": "attribute",
+		"type": "strength",
+		"first": "hero"
+	};
+	var heroAppearancePred = {
+		"category": "attribute",
+		"type": "appearance",
+		"first": "hero"
 	};
 
 	// Get love to hero closeness
@@ -305,7 +336,7 @@ var updateLocalStateInformation = function(){
 
 	// Get love to rival closeness
 	results = ensemble.get(loveToRivalClosenessPred);
-	stateInformation.loveToRivalCloseness= results[0].value;
+	stateInformation.loveToRivalCloseness = results[0].value;
 
 	// Get hero to Love closeness
 	results = ensemble.get(heroToLoveClosenessPred);
@@ -323,6 +354,12 @@ var updateLocalStateInformation = function(){
 	results = ensemble.get(heroToLoveattractionPred);
 	stateInformation.heroToLoveAttraction = results[0].value;
 
+	results = ensemble.get(sidepieceToHeroAttractionPred);
+	stateInformation.sidepieceToHeroAttraction = results[0].value;
+
+	results = ensemble.get(sidepieceToHeroClosenessPred);
+	stateInformation.sidepieceToHeroCloseness = results[0].value;
+
 	// Get hero intelligence
 	results = ensemble.get(heroIntelligencePred);
 	stateInformation.heroIntelligence = results[0].value;
@@ -330,15 +367,19 @@ var updateLocalStateInformation = function(){
 	// Get hero strength
 	results = ensemble.get(heroStrengthPred);
 	stateInformation.heroStrength = results[0].value;
+
+	// Get hero strength
+	results = ensemble.get(heroAppearancePred);
+	stateInformation.heroAppearance = results[0].value;
 };
 
 // Console log all actions available between all cast members
-function logActions (volitions,cast,numIntents,numActionsPerIntent) {
-	cast.forEach( (initiator) => {
-		console.log (` Available actions from ${initiator}:`);
-		cast.forEach( (responder) => {
-			let actions = ensemble.getActions(initiator,responder,volitions,cast,numIntents,numActionsPerIntent);
-			let actionNames = actions.reduce( (total,action) => {
+function logActions(volitions, cast, numIntents, numActionsPerIntent) {
+	cast.forEach((initiator) => {
+		console.log(` Available actions from ${initiator}:`);
+		cast.forEach((responder) => {
+			let actions = ensemble.getActions(initiator, responder, volitions, cast, numIntents, numActionsPerIntent);
+			let actionNames = actions.reduce((total, action) => {
 				total.push(action.name);
 				return total;
 			}, []);
@@ -387,21 +428,21 @@ logActions(initialVolitions, cast, 2, 100);
 // 2.) Populate Action Area
 // 3.) Handle action selection
 
-var nextTurn = function(){
+var nextTurn = function () {
 	// We have achieved A NEW TURN!
 	gameVariables.turnNumber += 1;
 	console.log("--- Turn:", gameVariables.turnNumber, "---");
 	checkForEndConditions();
-	if(gameVariables.gameOver === true){
+	if (gameVariables.gameOver === true) {
 		var endMessageArea = document.getElementById("statusMessage");
 		endMessageArea.innerHTML = gameVariables.endingText;
 	}
-	else{
+	else {
 		ensemble.setupNextTimeStep();
 		//ensemble.dumpSocialRecord();
 		var volitions = ensemble.calculateVolition(cast);
 		console.log("Calculated volitions:", volitions.dump());
-		logActions (volitions, cast, 2, 100);
+		logActions(volitions, cast, 2, 100);
 		populateActionLists(volitions, cast);
 		cleanUpUIForNewTurn();
 	}

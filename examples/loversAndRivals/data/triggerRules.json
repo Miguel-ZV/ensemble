@@ -88,6 +88,35 @@
 			],
 			"origin": "triggerRules",
 			"id": "triggerRules_3"
+		},
+		{
+			"name": "Sidepiece is attracted to self indulged people",
+			"conditions": [
+				{
+					"category": "trait",
+					"type": "named sidepiece",
+					"first": "theSidepiece",
+					"value": true
+				},
+				{
+					"category": "socialRecordLabelUndirected",
+					"type": "self-involved",
+					"first": "someone",
+					"value": true
+				}
+			],
+			"effects": [
+				{
+					"category": "feeling",
+					"type": "closeness",
+					"first": "theSidepiece",
+					"second": "someone",
+					"value": 6.7,
+					"operator": "+"
+				}
+			],
+			"origin": "triggerRules",
+			"id": "triggerRules_4"
 		}
 	]
 }

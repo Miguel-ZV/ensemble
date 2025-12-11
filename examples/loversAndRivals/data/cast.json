@@ -8,6 +8,9 @@
 		},
 		"rival": {
 			"name": "Rival"
+		},
+		"sidepiece": {
+			"name": "Sidepiece"
 		}
 	}
 }
