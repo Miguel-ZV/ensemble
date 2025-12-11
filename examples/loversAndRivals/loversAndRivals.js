@@ -43,9 +43,9 @@ var move = function () {
 var moveAllCharacters = function () {
 	// Takes a little bit of computation!
 	var loveDestination = (stateInformation.widthOfField / 2 - stateInformation.loveToHeroCloseness * 1.5 + stateInformation.loveToRivalCloseness * 2.5);
-	moveByCharacterName("hero", stateInformation.heroToLoveCloseness);
+	moveByCharacterName("hero", stateInformation.heroToLoveCloseness + 50);
 	moveByCharacterName("love", loveDestination);
-	moveByCharacterName("sidepiece", stateInformation.sidepieceToHeroCloseness - 50);
+	moveByCharacterName("sidepiece", stateInformation.sidepieceToHeroCloseness);
 };
 
 var moveByCharacterName = function (name, destination) {
@@ -99,9 +99,9 @@ var setupCharacterPositions = function (widthOfField) {
 	var loveToRivalCloseness = stateInformation.loveToRivalCloseness;
 
 	// Get hero to love closeness
-	var heroToLoveCloseness = stateInformation.heroToLoveCloseness;
+	var heroToLoveCloseness = stateInformation.heroToLoveCloseness + 50;
 
-	var sidepieceToHeroCloseness = stateInformation.sidepieceToHeroCloseness - 50;
+	var sidepieceToHeroCloseness = stateInformation.sidepieceToHeroCloseness;
 
 	// Store the width of field information
 	stateInformation.widthOfField = widthOfField;
